@@ -1,0 +1,12 @@
+query Viewer($locale: Locale!){
+  viewer {
+    currentUser {
+      id
+      displayName
+      firstName
+      lastName
+      language
+      email
+    }
+  }
+}

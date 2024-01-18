@@ -12,20 +12,82 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
+import gql from "graphql-tag";
+import useValidate from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
+
+
 export default {
     data() {
         return {
+            v$: useValidate(),
             emailPH: 'Email',
             passwordPH: 'Password',
             email: '',
             password: ''
         }
     },
+    apollo: {
+
+    },
+    validations() {
+        return {
+            email: { required },
+            password: { required },
+        }
+    },
     methods: {
         login() {
-            console.log(this.email, this.password)
-            this.$router.push('/profile')
+            console.log(this.email, this.password, this.$apollo)
+
+            this.v$.$validate()
+            if (!this.v$.$error) {
+                // submit graphql
+                // if (this.name !== "" && this.password !== "") {
+                //     await this.$apollo.mutate({
+                //         mutation: gql`mutation CreateUserTokenFromEmailPassword(
+                //             $email: String!
+                //             $password: String!
+                //             $intent: ViewerIntent!
+                //         ) {
+                //             createUserToken: createUserTokenFromEmailPassword(
+                //             email: $email
+                //             password: $password
+                //             intent: $intent
+                //             ) {
+                //             successful
+                //             messages {
+                //                 message
+                //                 code
+                //                 field
+                //             }
+                //             result {
+                //                 accessToken
+                //                 refreshToken
+                //             }
+                //             messages {
+                //                 code
+                //                 message
+                //                 field
+                //             }
+                //             }
+                //         }`,
+                //         variables: {
+                //             email: this.email,
+                //             password: this.password
+                //         }
+                //     }).then((data) => {
+                //         console.log(data)
+                //     }).catch((error) => {
+                //         console.error('error', error)
+                //     })
+                // }
+
+                this.$router.push('/profile')
+            } else {
+                alert('Form failed validation')
+            }
         }
     }
 }
@@ -48,7 +110,9 @@ export default {
     padding: 16px;
     background-color: rgb(90, 90, 90);
     border-radius: 16px;
+    max-width: 500px;
     width: 50%;
+    box-sizing: content-box;
 }
 
 input {
@@ -68,5 +132,9 @@ button {
     align-self: center;
     border-radius: 16px;
     border: 0;
+    box-sizing: content-box;
+    background-color: rgb(0, 149, 255);
+    color: white;
+    font-weight: bold;
 }
 </style>

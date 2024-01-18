@@ -1,0 +1,27 @@
+mutation CreateUserTokenFromEmailPassword(
+    $email: String!
+    $password: String!
+    $intent: ViewerIntent!
+  ) {
+    createUserToken: createUserTokenFromEmailPassword(
+      email: $email
+      password: $password
+      intent: $intent
+    ) {
+      successful
+      messages {
+        message
+        code
+        field
+      }
+      result {
+        accessToken
+        refreshToken
+      }
+      messages {
+        code
+        message
+        field
+      }
+    }
+  }
