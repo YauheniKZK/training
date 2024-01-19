@@ -17,7 +17,7 @@ import gql from "graphql-tag";
 import useValidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import store from '../store/store'
-
+import { login_mutation } from '../api/queries.ts'
 
 export default {
     data() {
@@ -28,9 +28,6 @@ export default {
             email: '',
             password: ''
         }
-    },
-    apollo: {
-
     },
     validations() {
         return {
@@ -47,33 +44,7 @@ export default {
                 // submit graphql
                 if (this.name !== "" && this.password !== "") {
                     await this.$apollo.mutate({
-                        mutation: gql`mutation CreateUserTokenFromEmailPassword(
-                            $email: String!
-                            $password: String!
-                            $intent: ViewerIntent!
-                        ) {
-                            createUserToken: createUserTokenFromEmailPassword(
-                            email: $email
-                            password: $password
-                            intent: $intent
-                            ) {
-                            successful
-                            messages {
-                                message
-                                code
-                                field
-                            }
-                            result {
-                                accessToken
-                                refreshToken
-                            }
-                            messages {
-                                code
-                                message
-                                field
-                            }
-                            }
-                        }`,
+                        mutation: login_mutation,
                         variables: {
                             email: this.email,
                             password: this.password,

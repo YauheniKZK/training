@@ -3,7 +3,8 @@ import App from './App.vue'
 import router from './router'
 import VueCookies from 'vue-cookies'
 import store from './store/store'
-import apolloProvider from './api/APIClient'
+import apolloProvider from './api/apiClient'
+import './assets/main.css'
 
 const app = createApp(App)
 

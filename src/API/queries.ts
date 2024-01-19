@@ -1,4 +1,21 @@
-mutation CreateUserTokenFromEmailPassword(
+import type { DocumentNode } from "graphql";
+import gql from "graphql-tag";
+
+
+const user_profile_query = gql`query {
+    viewer {
+      currentUser {
+        id
+        displayName
+        firstName
+        lastName
+        language
+        email
+      }
+    }
+  }`
+
+const login_mutation = gql`mutation CreateUserTokenFromEmailPassword(
     $email: String!
     $password: String!
     $intent: ViewerIntent!
@@ -24,4 +41,6 @@ mutation CreateUserTokenFromEmailPassword(
         field
       }
     }
-  }
+  }`
+
+export { user_profile_query, login_mutation }
