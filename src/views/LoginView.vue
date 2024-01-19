@@ -16,6 +16,7 @@
 import gql from "graphql-tag";
 import useValidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import store from '../store/store'
 
 
 export default {
@@ -38,51 +39,61 @@ export default {
         }
     },
     methods: {
-        login() {
+        async login() {
             console.log(this.email, this.password, this.$apollo)
 
             this.v$.$validate()
             if (!this.v$.$error) {
                 // submit graphql
-                // if (this.name !== "" && this.password !== "") {
-                //     await this.$apollo.mutate({
-                //         mutation: gql`mutation CreateUserTokenFromEmailPassword(
-                //             $email: String!
-                //             $password: String!
-                //             $intent: ViewerIntent!
-                //         ) {
-                //             createUserToken: createUserTokenFromEmailPassword(
-                //             email: $email
-                //             password: $password
-                //             intent: $intent
-                //             ) {
-                //             successful
-                //             messages {
-                //                 message
-                //                 code
-                //                 field
-                //             }
-                //             result {
-                //                 accessToken
-                //                 refreshToken
-                //             }
-                //             messages {
-                //                 code
-                //                 message
-                //                 field
-                //             }
-                //             }
-                //         }`,
-                //         variables: {
-                //             email: this.email,
-                //             password: this.password
-                //         }
-                //     }).then((data) => {
-                //         console.log(data)
-                //     }).catch((error) => {
-                //         console.error('error', error)
-                //     })
-                // }
+                if (this.name !== "" && this.password !== "") {
+                    await this.$apollo.mutate({
+                        mutation: gql`mutation CreateUserTokenFromEmailPassword(
+                            $email: String!
+                            $password: String!
+                            $intent: ViewerIntent!
+                        ) {
+                            createUserToken: createUserTokenFromEmailPassword(
+                            email: $email
+                            password: $password
+                            intent: $intent
+                            ) {
+                            successful
+                            messages {
+                                message
+                                code
+                                field
+                            }
+                            result {
+                                accessToken
+                                refreshToken
+                            }
+                            messages {
+                                code
+                                message
+                                field
+                            }
+                            }
+                        }`,
+                        variables: {
+                            email: this.email,
+                            password: this.password,
+                            intent: 'PATIENT'
+                        }
+                    }).then((data) => {
+                        console.log(data)
+                        const accessToken = data.data.createUserToken.result.accessToken
+                        const refreshToken = data.data.createUserToken.result.refreshToken
+                        //save data to cookies
+                        this.$cookies.set("access-token", accessToken, "8h");
+                        this.$cookies.set("refresh-token", refreshToken, "8h");
+
+                        //save to veux store
+                        store.commit('setTokens', { accessToken: accessToken, refreshToken: refreshToken })
+                        console.log('store', store)
+                    }).catch((error) => {
+                        console.error('error', error)
+                    })
+                }
 
                 this.$router.push('/profile')
             } else {

@@ -1,20 +1,15 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import apolloClient from './API/APIClient'
-import { createApolloProvider } from '@vue/apollo-option'
-
-import './assets/main.css'
+import VueCookies from 'vue-cookies'
+import store from './store/store'
+import apolloProvider from './api/APIClient'
 
 const app = createApp(App)
 
 app.use(router)
-
-
-const apolloProvider = createApolloProvider({
-  defaultClient: apolloClient,
-})
-
+app.use(VueCookies)
+app.use(store)
 app.use(apolloProvider)
 
 app.mount('#app')

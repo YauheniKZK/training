@@ -1,4 +1,5 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client/core"
+import { createApolloProvider } from '@vue/apollo-option'
 
 const httpLink = createHttpLink({
     uri: "https://nekxion-dev-mscp.nekxion-infra.com/graphql",
@@ -10,4 +11,8 @@ const apolloClient = new ApolloClient({
     link: httpLink,
 })
 
-export default apolloClient
+const apolloProvider = createApolloProvider({
+    defaultClient: apolloClient,
+})
+
+export default apolloProvider
